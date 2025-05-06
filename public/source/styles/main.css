@@ -1,0 +1,92 @@
+img {
+    width: 90px;
+}
+
+.navigation {
+    background-color: red;
+}
+
+.nav-btn {
+    font-size: 30px;
+    color: white;
+    text-decoration: none;
+    margin-right: 40px;
+    transition: all 0.5s ease;
+}
+
+.name{
+    font-size: 30px;
+    color: white;
+    text-decoration: none;
+    margin-right: 40px;
+    margin-bottom: 0;
+}
+
+.nav-btn:hover {
+    color: rgb(203, 203, 203);
+    transform: scale(1.1);
+}
+
+.employee {
+    height: 420px;
+    background-color: rgb(202, 202, 202);
+}
+
+.monitor{
+    height: 87.8vh;
+    background-color: rgb(202, 202, 202);
+}
+
+table {
+    position: relative !important;
+    border-collapse: collapse !important;
+    font-size: 18px;
+}
+
+table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #eeeeee;
+}
+
+.col-lg-8>p{
+    font-size: 42px;
+    font-weight: 400;
+}
+
+.apply-btn{
+    width: max-content;
+    border-width: 1px;
+    border-color: rgb(204, 204, 204);
+    border-radius: 40px;
+    font-size: 35px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: white;
+    box-shadow: 10px 5px 5px rgb(172, 172, 172);
+    color: red;
+    transition: all 0.5s ease;
+    margin-bottom: 30px;
+    text-decoration: none;
+}
+
+.apply-btn:hover{
+    color: red;
+    transform: scale(1.1);
+    background-color: rgb(241, 241, 241);
+}
+
+.plus{
+    font-size: 40px;
+}
+
+.help{
+    height: 87.8vh;
+}
+
+.col-lg-12{
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}

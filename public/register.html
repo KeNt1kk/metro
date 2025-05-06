@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="source/styles/auth.css">
+    <title>Metro</title>
+</head>
+
+<body class="vh-100">
+    <div class="row h-100">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4 d-flex justify-content-center align-items-center">
+            <form class="form-auth py-4 px-5">
+                <div class="mb-3">
+                    <div class="text-center">
+                        <p class="fs-60">Регистрация</p>
+                    </div>
+                    <label for="emaliRegister" class="form-label fs-4">Почта</label>
+                    <input type="email" class="form-input" id="emaliRegister" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="passwordRegister" class="form-label fs-4">Пароль</label>
+                    <input type="password" class="form-input" id="passwordRegister">
+                </div>
+                <div class="mb-3">
+                    <label for="repeatPasswordRegister" class="form-label fs-4">Повторите пароль</label>
+                    <input type="password" class="form-input" id="repeatPasswordRegister">
+                </div>
+                <div class="mb-3">
+                    <label for="mobilityRegister" class="form-label fs-4">Мобильность</label>
+                    <select name="mobility" id="mobilityRegister" class="form-input">
+                        <option value="" selected>-- Выберите мобильность --</option>
+                        <option value="blind">Плохое зрение</option>
+                        <option value="walking">Малая подвижность</option>
+                    </select>
+                </div>
+                <button type="submit" class="auth-btn mt-5">Зарегистрироваться</button>
+            </form>
+        </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-2">
+            <img src="source/images/метро1.png" alt="метро" class="auth-image">
+        </div>
+    </div>
+</body>
+
+</html>

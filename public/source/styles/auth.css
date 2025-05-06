@@ -1,0 +1,58 @@
+.w-25 {
+    width: 25%;
+}
+
+.row {
+    --bs-gutter-x: 0 !important;
+}
+
+.fs-60 {
+    font-size: 60px;
+}
+
+.form-input {
+    display: block;
+    border: none;
+    width: 100%;
+    border-radius: 8px !important;
+    background-color: rgb(212, 212, 212) !important;
+    height: 55px !important;
+    font-size: 23px !important;
+    transition: all 0.5s ease;
+}
+
+.form-input:focus {
+    -webkit-box-shadow: 0px 0px 8px 15px rgba(155, 0, 0, 0.5);
+    -moz-box-shadow: 0px 0px 8px 15px rgba(155, 0, 0, 0.5);
+    box-shadow: 0px 0px 8px 15px rgba(155, 0, 0, 0.5);
+    outline: none;
+}
+
+.form-auth {
+    color: white;
+    background-color: red;
+    border-radius: 30px;
+    box-shadow: 15px 10px 5px rgb(197, 0, 0);
+}
+
+.auth-image {
+    margin-top: 30px;
+    width: 150px;
+}
+
+.auth-btn {
+    background-color: rgb(182, 0, 0);
+    margin-top: 20px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    height: 65px;
+    font-size: 35px;
+    color: white;
+    transition: all 0.5s ease;
+}
+
+.auth-btn:hover{
+    background-color: rgb(162, 0, 0);
+    transform: scale(1.1);
+}

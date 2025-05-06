@@ -1,0 +1,33 @@
+*{
+    font-family: "Poppins", sans-serif;
+}
+
+.welcome {
+    font-size: 96px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    color: rgb(255, 0, 0);
+    text-shadow: 2px 2px rgb(189, 0, 0);
+}
+
+.welcome-btn{
+    display: inline-block;
+    font-size: 60px;
+    background-color: rgb(255, 0, 0);
+    color: white;
+    border: none;
+    box-shadow: 10px 5px 3px rgb(189, 0, 0);
+    border-radius: 15px;
+    text-decoration: none;
+    transition: all 0.5s ease;
+}
+
+.welcome-btn:hover{
+    color: white;
+    background-color: rgb(222, 16, 16);
+    transform: scale(1.1);
+}
+
+.mb-150px{
+    margin-bottom: 150px;
+}

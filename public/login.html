@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="source/styles/auth.css">
+    <title>Metro</title>
+</head>
+
+<body class="vh-100">
+    <div class="row h-100">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4 d-flex justify-content-center align-items-center">
+            <form class="form-auth py-4 px-5">
+                <div class="mb-3">
+                    <div class="text-center">
+                        <p class="fs-60">Вход</p>
+                    </div>
+                    <label for="emaliLogin" class="form-label fs-4">Почта</label>
+                    <input type="email" class="form-input" id="emaliLogin" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="passwordLogin" class="form-label fs-4">Пароль</label>
+                    <input type="password" class="form-input" id="passwordLogin">
+                </div>
+                <button type="submit" class="auth-btn mt-5">Вход</button>
+            </form>
+        </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-2">
+            <img src="source/images/метро1.png" alt="метро" class="auth-image">
+        </div>
+    </div>
+</body>
+
+</html>
