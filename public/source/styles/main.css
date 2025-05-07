@@ -46,7 +46,6 @@ table {
 table thead {
     position: sticky;
     top: 0;
-    z-index: 1;
     background-color: #eeeeee;
 }
 
@@ -89,4 +88,54 @@ table thead {
 .col-lg-12{
     padding-right: 0 !important;
     padding-left: 0 !important;
+}
+
+.statement-form{
+    border-color: red;
+    border-width: 1px;
+    border-radius: 20px;
+    width: 37%;
+    box-shadow: 5px 5px 5px rgb(182, 0, 0);
+}
+
+.statement-form input,
+.statement-form select{
+    border: none;
+    width: 100%;
+    border-radius: 13px;
+    padding-left: 7px;
+    background-color: rgb(212, 212, 212);
+    height: 55px;
+    font-size: 23px;
+}
+
+.statement-form label{
+    font-size: 24px;
+}
+
+.statement-form p{
+    font-size: 40px;
+    text-align: center;
+}
+
+.statement-form button{
+    border: none;
+    border-radius: 10px;
+    background-color: red;
+    color: white;
+    font-size: 35px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    transition: all 0.5s ease;
+}
+
+.statement-form button:hover{
+    transform: scale(1.1);
+    background-color: rgb(230, 0, 0);
+    color: rgb(231, 231, 231);
 }

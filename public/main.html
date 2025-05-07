@@ -201,20 +201,23 @@
                 <div class="col-lg-2 d-flex align-items-end help">
                     <button class="apply-btn"><span class="plus">+</span>Заявка</button>
                 </div>
-                <dialog id="add_info" class="border-0 px-3 py-3 br-16" open>
+                <dialog id="add_info" class="px-3 py-3 statement-form">
                     <form class="d-flex flex-column">
                         <p>Подача заявки</p>
-                        <label>Дата</label>
-                        <input type="date" class="mb-2">
-                        <label>Багаж</label>
-                        <input type="text" name="lastname" class="mb-2" minlength="2" maxlength="20">
-                        <label>От куда</label>
-                        <input type="number" name="age" class="mb-2" min="1" max="100">
-                        <label>Куда</label>
-                        <input type="number" name="age" class="mb-2" min="1" max="100">
+                        <label for="dateForm">Дата</label>
+                        <input type="date" id="dateForm" class="mb-2">
+                        <label for="bagageForm">Багаж</label>
+                        <select name="bagage" id="bagageForm">
+                            <option value="false">Нету</option>
+                            <option value="true">Есть</option>
+                        </select>
+                        <label for="stationStartForm">От куда</label>
+                        <select name="stationStart" id="stationStartForm"></select>
+                        <label for="stationEndForm">Куда</label>
+                        <select name="stationEnd" id="stationEndForm"></select>
                         <div class="d-flex justify-content-between">
-                            <button type="button" id="close-btn" class="btn btn-dark">Закрыть</button>
-                            <button type="submit" class="btn btn-dark ms-3">Сохранить</button>
+                            <button type="button" class="">Отмена</button>
+                            <button type="submit" class="">ОК</button>
                         </div>
                     </form>
                 </dialog>
