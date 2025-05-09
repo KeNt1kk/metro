@@ -14,13 +14,21 @@
     <div class="row h-100">
         <div class="col-lg-4"></div>
         <div class="col-lg-4 d-flex justify-content-center align-items-center">
-            <form class="form-auth py-4 px-5">
+            <form class="form-auth py-4 px-5" id="registerForm">
                 <div class="mb-3">
                     <div class="text-center">
                         <p class="fs-60">Регистрация</p>
                     </div>
                     <label for="emaliRegister" class="form-label fs-4">Почта</label>
                     <input type="email" class="form-input" id="emaliRegister" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="nameRegister" class="form-label fs-4">Имя</label>
+                    <input type="text" class="form-input" id="nameRegister">
+                </div>
+                <div class="mb-3">
+                    <label for="surnameRegister" class="form-label fs-4">Фамилия</label>
+                    <input type="text" class="form-input" id="surnameRegister">
                 </div>
                 <div class="mb-3">
                     <label for="passwordRegister" class="form-label fs-4">Пароль</label>
@@ -46,6 +54,7 @@
             <img src="source/images/метро1.png" alt="метро" class="auth-image">
         </div>
     </div>
+    <script src="scripts/register.js"></script>
 </body>
 
 </html>
