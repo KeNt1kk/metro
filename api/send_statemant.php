@@ -63,47 +63,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Находим свободных сотрудников
         $employees = findAvailableEmployees($pdo, $startStationId, $startStationLine, $dateStatemant, $requiredEmployees);
-   
-        if (count($employees) >= $requiredEmployees) {
-            // Создаем заявку
-            $statementId = createStatement(
-                $pdo, 
-                $baggageAvailability, 
-                $dateStatemant, 
-                $startStationId, 
-                $endStationId, 
-                $userId, 
-                $employees,
-                $requiredEmployees
-            );
-            
+        if (empty($employees)) {
+            // Если ни один сотрудник не найден
+            $response = [
+                'success' => false,
+                'empty' => true,
+                'message' => 'Свободных сотрудников на этот день не найдено. Вы можете повторить попытку позже',
+                'retry' => true
+            ];
+            echo json_encode($response);
+            exit; 
+        }
+        // Всегда создаем заявку, даже если сотрудников не хватает
+        $result = createStatement(
+            $pdo, 
+            $baggageAvailability, 
+            $dateStatemant, 
+            $startStationId, 
+            $endStationId, 
+            $userId, 
+            $employees,
+            $requiredEmployees
+        );
+        
+        if ($result['status'] === 'approved') {
             $response['success'] = true;
-            $response['message'] = 'Заявка создана. Назначено сотрудников: ' . count($employees);
+            $response['message'] = 'Заявка одобрена. Назначено сотрудников: ' . $result['employees_found'];
         } else {
-            $response['message'] = 'Недостаточно свободных сотрудников. Попробуйте позже.';
+            $response['success'] = false;
+            $response['message'] = 'Заявка создана, но ожидает назначения сотрудников (найдено ' . 
+                                $result['employees_found'] . ' из ' . $result['employees_required'] . 
+                                '). Мы уведомим вас, когда сотрудники будут назначены.';
             $response['retry'] = true;
-            $response['retry_after'] = 300;
         }
-    } catch (PDOException $e) {
-        // Выводим общую информацию об ошибке
-        echo "Ошибка в SQL запросе:\n";
-        echo "Сообщение: " . $e->getMessage() . "\n";
-        echo "Код ошибки: " . $e->getCode() . "\n";
-        
-        // Если ошибка в подготовленном запросе, выводим его
-        if (isset($stmt)) {
-            echo "Запрос: " . $stmt->queryString . "\n";
-            echo "Параметры: " . print_r($stmt->errorInfo(), true) . "\n";
-        } elseif (isset($userStmt)) {
-            echo "Запрос (users): " . $userStmt->queryString . "\n";
-        } elseif (isset($stationStmt)) {
-            echo "Запрос (station): " . $stationStmt->queryString . "\n";
-        }
-        
-        // Выводим стек вызовов для отладки
-        echo "Стек вызовов:\n";
-        print_r($e->getTrace());
-        die();
+    } catch (Exception $e) {
+        $response['message'] = 'Ошибка при создании заявки: ' . $e->getMessage();
     }
 }
 
@@ -132,47 +126,52 @@ function calculateRequiredEmployees($mobility, $baggageAvailability) {
  */
 function findAvailableEmployees($pdo, $stationId, $line, $date, $requiredCount) {
     $employees = [];
+
     // 1. Ищем на станции
-    
     $query = "SELECT e.id 
-    FROM employee e
-    WHERE e.id_station = ?
-    AND e.id IN (
-        SELECT em.id_employee 
-        FROM employment em
-        WHERE em.date = ?
-    )
-    LIMIT " . (int)$requiredCount;
+              FROM employee e
+              WHERE e.id_station = ?
+                AND EXISTS (
+                    SELECT 1
+                    FROM employment em
+                    WHERE em.id_employee = e.id
+                      AND em.date = ?
+                      AND em.current_statemants < 5
+                )
+              LIMIT " . (int)$requiredCount;
+
     $stmt = $pdo->prepare($query);
     $stmt->execute([$stationId, $date]);
     $employees = $stmt->fetchAll(PDO::FETCH_COLUMN);
-  // 2. Если не хватает, ищем на линии
+
+    // 2. Если не хватает, ищем на линии
     if (count($employees) < $requiredCount) {
         $remaining = $requiredCount - count($employees);
-        
+
         $lineQuery = "SELECT e.id 
-                    FROM employee e
-                    JOIN station s ON e.id_station = s.id
-                    WHERE s.`line` = ?
-                    AND e.id_station != ?
-                    AND e.id IN (
-                        SELECT em.id_employee 
-                        FROM employment em
-                        WHERE em.date = ?
-                    )
-                    LIMIT " . (int)$remaining;
-        
+                      FROM employee e
+                      JOIN station s ON e.id_station = s.id
+                      WHERE s.`line` = ?
+                        AND e.id_station != ?
+                        AND e.id NOT IN (" . ($employees ? implode(',', array_map('intval', $employees)) : 'NULL') . ")
+                        AND EXISTS (
+                            SELECT 1
+                            FROM employment em
+                            WHERE em.id_employee = e.id
+                              AND em.date = ?
+                              AND em.current_statemants < 5
+                        )
+                      LIMIT " . (int)$remaining;
+
         $lineStmt = $pdo->prepare($lineQuery);
         $lineStmt->execute([$line, $stationId, $date]);
         $lineEmployees = $lineStmt->fetchAll(PDO::FETCH_COLUMN);
-        
+
         $employees = array_merge($employees, $lineEmployees);
     }
-    
+
     return $employees;
-
 }
-
 /**
  * Создание заявки и назначение сотрудников
  */
@@ -180,32 +179,74 @@ function createStatement($pdo, $baggage, $date, $startStationId, $endStationId, 
     $pdo->beginTransaction();
     
     try {
-        // Основной сотрудник (первый в списке)
-        $mainEmployeeId = $employees[0];
+        // Определяем статус
+        $status = (count($employees) >= $requiredCount) ? 'approved' : 'pending';
+        $mainEmployeeId = !empty($employees) ? $employees[0] : null;
         
         // Создаем заявку
         $stmt = $pdo->prepare("
             INSERT INTO statemants 
             (bagage, date, status, id_station_start, id_station_end, id_user, id_employee) 
-            VALUES (?, ?, 'pending', ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
-        
         $stmt->execute([
             $baggage ? 'yes' : 'no',
             $date,
+            $status,
             $startStationId,
             $endStationId,
             $userId,
             $mainEmployeeId
         ]);
-        
         $statementId = $pdo->lastInsertId();
-               
+        
+        // Добавляем сотрудников и обновляем их счетчики
+        if (!empty($employees)) {
+            $stmt = $pdo->prepare("
+                INSERT INTO statement_employees 
+                (statement_id, employee_id, is_main) 
+                VALUES (?, ?, ?)
+            ");
+            
+            foreach ($employees as $index => $employeeId) {
+                $isMain = ($index === 0) ? 1 : 0;
+                $stmt->execute([$statementId, $employeeId, $isMain]);
+                
+                // Обновляем счетчик заявок сотрудника
+                updateEmployeeStatementsCount($pdo, $employeeId, $date);
+            }
+        }
+        
         $pdo->commit();
-        return $statementId;
+        return [
+            'id' => $statementId,
+            'status' => $status,
+            'employees_found' => count($employees),
+            'employees_required' => $requiredCount
+        ];
     } catch (Exception $e) {
         $pdo->rollBack();
         throw $e;
+    }
+}
+/**
+ * Обновляет счетчик заявок сотрудника в таблице employment
+ */
+function updateEmployeeStatementsCount($pdo, $employeeId, $date) {
+    // Сначала проверяем существование записи
+    $checkStmt = $pdo->prepare("
+        SELECT id FROM employment 
+        WHERE id_employee = ? AND date = ?
+    ");
+    $checkStmt->execute([$employeeId, $date]);
+    $exists = $checkStmt->fetch();
+    if ($exists) {
+        $updateStmt = $pdo->prepare("
+            UPDATE employment 
+            SET current_statemants = current_statemants + 1 
+            WHERE id_employee = ? AND date = ?
+        ");
+        $updateStmt->execute([$employeeId, $date]);
     }
 }
 ?>

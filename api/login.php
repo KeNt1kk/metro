@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = [
                 'success' => true,
                 'message' => 'Вход выполнен успешно!',
-                'redirect' => ($user['role'] === 'admin') ? '/public/admin.html' : '/public/profile.php'
+                'redirect' => ($user['role'] === 'admin') ? '/public/admin.php' : '/public/profile.php'
             ];
         } else {
             $response['message'] = 'Неверный email или пароль';

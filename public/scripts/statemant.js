@@ -4,7 +4,7 @@ document.getElementById('statemantForm').addEventListener('submit', function(e) 
     const formData = {
         startStation: document.getElementById('startStation').value,
         endStation: document.getElementById('endStation').value,
-        baggageAvailability: document.getElementById('baggageAvailability').value,
+        baggageAvailability: document.getElementById('baggageAvailability').checked ? '1' : '0',
         dateStatemant: document.getElementById('dateStatemant').value
     };
     
@@ -19,9 +19,18 @@ document.getElementById('statemantForm').addEventListener('submit', function(e) 
     .then(data => {
         if (data.success) {
             alert(data.message);
-        } else {
+            window.location.href = '/public/profile.php';
+        } else if(!data.empty) {
+            const userConfirmed = confirm(data.message + '\n\nХотите перейти в профиль для отслеживания статуса?');
+            if (userConfirmed) {
+                window.location.href = '/public/profile.php';
+            }
+        }else{
             alert(data.message);
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при отправке заявки');
+    });
 });
