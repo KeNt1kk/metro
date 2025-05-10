@@ -3,7 +3,7 @@ session_start();
 
 // Проверка авторизации
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /login.php");
+    header("Location: /public/login.html");
     exit();
 }
 

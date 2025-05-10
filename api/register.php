@@ -45,6 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode($response);
         exit;
     }
+    if (strlen($mobility) < 1) {
+        $response['message'] = 'Выберите тип мобильности';
+        echo json_encode($response);
+        exit;
+    }
     try {
         // Проверяем, существует ли пользователь с таким email
         $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
@@ -62,7 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Добавляем нового пользователя
         $stmt = $pdo->prepare("INSERT INTO users (email, password, firstname, lastname, mobility) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$email, $hashedPassword, $name, $surname, $mobility]);
-        
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_role'] = $user['role'];
         $response['success'] = true;
         $response['message'] = 'Регистрация прошла успешно!';
     } catch (PDOException $e) {

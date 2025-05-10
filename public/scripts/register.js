@@ -21,7 +21,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     .then(data => {
         if (data.success) {
             alert(data.message);
-            window.location.href = '/profile.php';
+            window.location.href = '/public/profile.php';
         } else {
             alert(data.message);
         }
