@@ -67,8 +67,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Добавляем нового пользователя
         $stmt = $pdo->prepare("INSERT INTO users (email, password, firstname, lastname, mobility) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$email, $hashedPassword, $name, $surname, $mobility]);
+        // Получаем ID только что добавленного пользователя
+        $userId = $pdo->lastInsertId();
+        $stmt = $pdo->prepare("SELECT id, role FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$user) {
+            throw new Exception("Не удалось получить данные пользователя");
+        }
+        session_start();
+        // Заносим данные в сессию
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_role'] = $user['role'];
+        
         $response['success'] = true;
         $response['message'] = 'Регистрация прошла успешно!';
     } catch (PDOException $e) {
