@@ -86,6 +86,7 @@ try {
         <nav class="navigation">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="main.html"><img src="source/images/метроФон.png" alt="metro"></a>
+                <a href="/api/logout.php" class="nav-btn">Выйти</a>
                 <p class="name"><?php echo htmlspecialchars($userData['firstname'].' '.$userData['lastname']); ?></p>
             </div>
         </nav>
