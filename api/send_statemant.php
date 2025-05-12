@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Получаем и валидируем данные
     $startStation = trim($_POST['startStation'] ?? '');
     $endStation = trim($_POST['endStation'] ?? '');
-    $baggageAvailability = isset($_POST['baggageAvailability']) ? 1 : 0;
+    $baggageAvailability = (int)$_POST['baggageAvailability'];
     $dateStatemant = $_POST['dateStatemant'] ?? date('Y-m-d');
     $userId = $_SESSION['user_id'] ?? null;
 
@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode($response);
             exit; 
         }
+        
         // Всегда создаем заявку, даже если сотрудников не хватает
         $result = createStatement(
             $pdo, 
@@ -190,7 +191,7 @@ function createStatement($pdo, $baggage, $date, $startStationId, $endStationId, 
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
-            $baggage ? 'yes' : 'no',
+            $baggage ? 1 : 0,
             $date,
             $status,
             $startStationId,

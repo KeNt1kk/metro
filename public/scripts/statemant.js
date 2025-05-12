@@ -4,10 +4,10 @@ document.getElementById('statemantForm').addEventListener('submit', function(e) 
     const formData = {
         startStation: document.getElementById('startStation').value,
         endStation: document.getElementById('endStation').value,
-        baggageAvailability: document.getElementById('baggageAvailability').checked ? '1' : '0',
+        baggageAvailability: document.getElementById('baggageAvailability').checked ? 1 : 0,
         dateStatemant: document.getElementById('dateStatemant').value
     };
-    
+    console.log(formData);
     fetch('/api/send_statemant.php', {
         method: 'POST',
         headers: {
