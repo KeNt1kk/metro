@@ -10,8 +10,8 @@ $response = [
 if (isset($_SESSION['user_id'])) {
     $response['is_logged_in'] = true;
     $response['redirect_url'] = ($_SESSION['user_role'] === 'admin') 
-        ? '/public/admin.html' 
-        : '/public/profile.html';
+        ? '/public/admin.php' 
+        : '/public/profile.php';
 }
 
 echo json_encode($response);

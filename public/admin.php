@@ -79,7 +79,10 @@ try {
         <nav class="navigation">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="admin.php"><img src="source/images/метроФон.png" alt="metro"></a>
-                <a href="/api/logout.php" class="nav-btn">Выйти</a>
+                <div class="d-flex">
+                    <a href="profile.php" class="nav-btn">Главная</a>
+                    <a href="/api/logout.php" class="nav-btn">Выйти</a>
+                </div>
             </div>
         </nav>
     </header>

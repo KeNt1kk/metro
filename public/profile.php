@@ -86,8 +86,10 @@ try {
         <nav class="navigation">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="main.html"><img src="source/images/метроФон.png" alt="metro"></a>
-                <a href="/api/logout.php" class="nav-btn">Выйти</a>
-                <p class="name"><?php echo htmlspecialchars($userData['firstname'].' '.$userData['lastname']); ?></p>
+                <div class="d-flex">
+                    <p class="name"><?php echo htmlspecialchars($userData['firstname'].' '.$userData['lastname']); ?></p>
+                    <a href="/api/logout.php" class="nav-btn">Выйти</a>
+                </div>
             </div>
         </nav>
     </header>
@@ -187,9 +189,9 @@ try {
                 <div class="col-lg-2 help position-relative" style="min-height: 300px;">
                     <div class="position-absolute bottom-0 end-0">
                         <div class="d-flex flex-column align-items-end gap-2">
-                            <a href="main.php" class="apply-btn"><span class="plus">⟵</span>Обратно</a>
+                            <a href="main.php" class="apply-btn m-4"><span class="plus">⟵</span>Обратно</a>
                             <?php if ($userData['role'] === 'admin'): ?>
-                                <a href="admin.php" class="apply-btn admin-btn"><span class="plus">⚙️</span>Админ панель</a>
+                                <a href="admin.php" class="apply-btn admin-btn mx-4"><span class="plus">⚙️</span>Админ панель</a>
                             <?php endif; ?>
                         </div>
                     </div>
