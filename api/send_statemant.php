@@ -148,29 +148,39 @@ function findAvailableEmployees($pdo, $stationId, $line, $date, $requiredCount) 
     // 2. Если не хватает, ищем на линии
     if (count($employees) < $requiredCount) {
         $remaining = $requiredCount - count($employees);
-
+        
+        $params = [$line, $stationId];
+        $notInClause = '';
+        
+        if (!empty($employees)) {
+            $placeholders = implode(',', array_fill(0, count($employees), '?'));
+            $notInClause = "AND e.id NOT IN ($placeholders)";
+            $params = array_merge($params, $employees);
+        }
+        
+        $params[] = $date;
+        
         $lineQuery = "SELECT e.id 
-                      FROM employee e
-                      JOIN station s ON e.id_station = s.id
-                      WHERE s.`line` = ?
+                    FROM employee e
+                    JOIN station s ON e.id_station = s.id
+                    WHERE s.`line` = ?
                         AND e.id_station != ?
-                        AND e.id NOT IN (" . ($employees ? implode(',', array_map('intval', $employees)) : 'NULL') . ")
+                        $notInClause
                         AND EXISTS (
                             SELECT 1
                             FROM employment em
                             WHERE em.id_employee = e.id
-                              AND em.date = ?
-                              AND em.current_statemants < 5
+                            AND em.date = ?
+                            AND em.current_statemants < 5
                         )
-                      LIMIT " . (int)$remaining;
-
+                    LIMIT " . (int)$remaining;
+        
         $lineStmt = $pdo->prepare($lineQuery);
-        $lineStmt->execute([$line, $stationId, $date]);
+        $lineStmt->execute($params);
         $lineEmployees = $lineStmt->fetchAll(PDO::FETCH_COLUMN);
-
+        
         $employees = array_merge($employees, $lineEmployees);
     }
-
     return $employees;
 }
 /**
