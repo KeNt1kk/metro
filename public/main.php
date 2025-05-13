@@ -19,7 +19,7 @@ try {
             s.name AS station_name,
             s.line AS line_name,
             em.date AS employee_date,
-            COUNT(em.id) AS current_statements
+            em.current_statemants AS current_statements
         FROM 
             employee e
         JOIN 
